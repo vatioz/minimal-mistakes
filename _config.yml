@@ -16,7 +16,7 @@ description              : "Code blog"
 url                      : https://vatioz.github.io
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : vatioz/vatioz.github.io
-teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
+teaser                   : "assets/img/sunset_500x300.jpg"
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
 comments:
