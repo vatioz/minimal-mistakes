@@ -1,5 +1,6 @@
 ---
 title: Powershell prompt
+excerpt: My basic Powershell tweak
 tags: powershell
 category: programming
 publish: true
