@@ -88,7 +88,7 @@ author:
   avatar           : https://avatars1.githubusercontent.com/u/14203428?s=460&v=4
   bio              : "Programmer"
   location         : "Ostrava, CZ"
-  email            :
+  email            : petr.kubat+githubio (at) gmail
   uri              :
   home             : # null (default), "absolute or relative url to link to author home"
   bitbucket        :
@@ -97,7 +97,7 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : https://github.com/vatioz
+  github           : vatioz
   gitlab           :
   google_plus      :
   keybase          :
