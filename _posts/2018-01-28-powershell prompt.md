@@ -2,7 +2,8 @@
 title: Powershell prompt
 tags: powershell
 category: programming
-publish: false
+publish: true
+draft: true
 ---
 
 I want to share my basic powershell tweak. I don't like default powershell prompt especially because if you are deep in some folder structure, your cursor line will be filled with long path information you mostly don't need to see. 
