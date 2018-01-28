@@ -254,4 +254,4 @@ defaults:
       share: true
       related: false
       header:
-        image: /assets/img/sunset_blurred_1280x370.jpg
+        overlay_image: /assets/img/sunset_blurred_1280x370.jpg
