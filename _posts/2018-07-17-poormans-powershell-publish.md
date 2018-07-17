@@ -26,8 +26,6 @@ This will come handy later!
 
 ## .NET Core
 
-This is small seggway to my actual project. 
-
 My project tries to be multi-platform and uses .NET Core 2.1 to achieve that. What is different in .NET Core in comparison to full .NET Framework is that it is command line based. The center of all is `dotnet.exe` utility (located in `C:\Program Files\dotnet\`). 
 
 ### dotnet publish
