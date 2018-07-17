@@ -7,8 +7,8 @@ tags:
   - release
   - publish
 category: programming
-toc: false
-draft: true
+toc: true
+draft: false
 ---
 
 My latest project is supposed to be public and that was a new requirement for me. 
@@ -30,7 +30,7 @@ My project tries to be multi-platform and uses .NET Core 2.1 to achieve that. Wh
 
 ### dotnet publish
 
-Other thing that changed with new framework is that it doesn't produce executable when it's built. It kind of make sense, you don't know on what platform it will be executed - exe file is no-go for linux or mac.
+Other thing that changed with new framework is that it doesn't produce executable when it's built. It kind of make sense, you don't know what platform it will be executed on - exe file is no-go for linux or mac.
 
 Instead, the main output of your application is DLL and you use `dotnet run myapp.dll` to execute it. 
 
@@ -54,48 +54,47 @@ Remove-Item "$output\*" -Recurse -Confirm:$true
 ```
 
 This will generate publish folder for default set of platforms. If you want to control for which platforms you will release you need to change two things.  
-But first, let's find what platforms we want to publish for. Go to https://docs.microsoft.com/en-us/dotnet/core/rid-catalog and choose from the supported platforms. I chose `win10-x64`, `win10-x86`, `win-x64`, `win-x86`, `osx-x64` and `linux-x64`.
+(To find what platforms we want to publish for, go to https://docs.microsoft.com/en-us/dotnet/core/rid-catalog and choose from the supported platforms. I chose `win10-x64`, `win10-x86`, `win-x64`, `win-x86`, `osx-x64` and `linux-x64`.)
 
 1. Edit your `csproj` and include chosen RIDs into `<RuntimeIdentifiers>` element under `<PropertyGroup>` element. My looks like this:
 
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Platforms>AnyCPU;x86;x64</Platforms>
-    <RuntimeIdentifiers>win-x64;win-x86;osx-x64;linux-x64;win10-x64;win10-x86;</RuntimeIdentifiers>    
-  </PropertyGroup>
-  <ItemGroup>
-    <Folder ... />
-    ...
-  </ItemGroup>
-</Project>
-```
+    ```xml
+    <Project Sdk="Microsoft.NET.Sdk">
+      <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <Platforms>AnyCPU;x86;x64</Platforms>
+        <RuntimeIdentifiers>win-x64;win-x86;osx-x64;linux-x64;win10-x64;win10-x86;</RuntimeIdentifiers>    
+      </PropertyGroup>
+      <ItemGroup>
+        <Folder ... />
+        ...
+      </ItemGroup>
+    </Project>
+    ```
 
 2. Include these identifiers in our publishing Powershell script:
 
-
-```powershell
-$project = "C:\path\to\apps\project.csproj"
-$output = "C:\path\to\releases"
-$dotnet = "C:\Program Files\dotnet\dotnet.exe"
-$runtimes = @(
-"win10-x64"
-"win10-x86"
-"win-x64"
-"win-x86"
-"osx-x64"
-"linux-x64"
-)
-
-# clear previous releases
-Remove-Item "$output\*" -Recurse -Confirm:$true
-
-$runtimes | %{
-    & $dotnet publish $project -c release -r $_  -o ("{0}\{1}" -f $output,$_)
-}
-```
+    ```powershell
+    $project = "C:\path\to\apps\project.csproj"
+    $output = "C:\path\to\releases"
+    $dotnet = "C:\Program Files\dotnet\dotnet.exe"
+    $runtimes = @(
+    "win10-x64"
+    "win10-x86"
+    "win-x64"
+    "win-x86"
+    "osx-x64"
+    "linux-x64"
+    )
+    
+    # clear previous releases
+    Remove-Item "$output\*" -Recurse -Confirm:$true
+    
+    $runtimes | %{
+        & $dotnet publish $project -c release -r $_  -o ("{0}\{1}" -f $output,$_)
+    }
+    ```
 
 This will generate publish folder only for specified platforms/runtimes - in my case 6 folders.
 
@@ -103,7 +102,7 @@ This will generate publish folder only for specified platforms/runtimes - in my 
 
 Now, we need to create single file from each of those publish folders. Let's zip it with Powershell's integrated cmdlet `Compress-Archive`.
 
-Simply do some magic with composing files name and output paths and ZIP it:
+Simply do some magic with composing file names and output paths and ZIP it:
 
 ```powershell
 $version = "0.5-beta"
@@ -117,7 +116,7 @@ $runtimes | %{
 }
 ```
 
-Ok, now have our release files ready, what now? Remember GitHubReleaseManager module? Using that we just create new release and upload our release files to it.
+Ok, we have our release files ready, what now? Remember GitHubReleaseManager module? Using that we can create new release and upload our release files to it.
 
 ## GitHub Release
 
@@ -146,7 +145,7 @@ New-GitHubRelease -Repository $product -Name "$product $version" -Tag $version
 This is enough to create new release on GitHub. You can find it on url like this:
 `https://github.com/$githubUser/$product/releases/tag/$version`
 
-But how about the actual release, those zips we created? Cmdlet `New-GitHubRelease` also has parameter `-Assets`! An asset is a Powershell hashtable with two keys - `Path` and `Content-Type` (mind the hyphen!). The parameter accepts array of those.
+But how about the actual release, those zips we created? Cmdlet `New-GitHubRelease` also has parameter `-Asset`! An asset is a Powershell hashtable with two keys - `Path` and `Content-Type` (mind the hyphen!). The parameter accepts array of those.
 
 So for example, this is how it could look like:
 
